@@ -1,0 +1,43 @@
+import java.io.File;
+
+public class printFileDirectory{
+	public static void main(String args[]){
+		
+		File wd = new File ("/Users/anavikajla/Desktop");
+		System.out.println(wd.getAbsolutePath());
+		filePath(wd);
+	}
+	
+	public static void filePath(File wd)
+	{
+		File[] path;
+		path = wd.listFiles();
+		for(File file:path)
+		{
+			directoryPath(file);
+		}
+	}
+	
+	public static void directoryPath(File file){
+		if(file.isDirectory()==true){
+			int num = numFile(file);
+			System.out.print(num + " ");
+			System.out.println(file.getAbsolutePath());
+			filePath(file);
+		}
+		else System.out.println("0 " + file.getAbsolutePath());
+	}
+	
+	public static int numFile(File f){
+		int count=0;
+		File[] path;
+		path = f.listFiles();
+		if(f.isDirectory()==true)
+		{
+		for(File file:path) count++;
+		return count;
+		}
+		
+		else return 0;		
+	}
+}
