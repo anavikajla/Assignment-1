@@ -1,0 +1,47 @@
+/*a) First, write a program that simply prints all files and directories under
+the current working directory, one line per file or directory, along with a "f"
+or "d" at the beginning depending on whether it is a file or directory. 
+
+For example, suppose the current directory has a file f0 and a directory d in
+it.  Suppose d has 2 files under it, f1 and f2, and a subdirectory d1, and d1
+further contains a single file, f3.  Then your program should print the following.
+
+f /f0
+d /d
+f /d/f1
+f /d/f2
+d /d/d1 
+f /d/d1/f3
+
+The order of printing does not matter, but all files and directories should be listed.
+The full path of the file from the root of the file system should be printed.
+*/
+import java.io.File;
+
+public class printFileDirectory{
+	public static void main(String args[]){
+		
+		File wd = new File ("/Users/anavikajla/Desktop");
+		System.out.println(wd.getAbsolutePath());
+		filePath(wd);
+	}
+	
+	public static void filePath(File wd)
+	{
+		File[] path;
+		path = wd.listFiles();
+		for(File file:path)
+		{
+			directoryPath(file);
+		}
+	}
+	
+	public static void directoryPath(File file)
+	{
+		if(file.isDirectory()==true){
+			System.out.println(file.getAbsolutePath());
+			filePath(file);
+		}
+		else System.out.println(file.getAbsolutePath());
+	}
+}
