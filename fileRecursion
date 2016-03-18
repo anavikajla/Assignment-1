@@ -9,9 +9,14 @@ public class getFiles{
 		File wd = new File (".");
 		System.out.println(wd.getAbsolutePath());
 		filePath(wd);
-		int num = fileExt(wd);
+		
 		System.out.println("Number of files by type:");
-		System.out.println("html: " + num);
+		for(int i=0;i<TYPES.length;i++)
+		{
+			String type=TYPES[i];
+			int num = fileExt(wd, type);
+			System.out.println(type + " : " + num);
+		}
 	}
 	
 	public static void filePath(File wd)
@@ -54,20 +59,21 @@ public class getFiles{
 		return count;
 	}
 	
-	public static int fileExt(File f)
+	public static int fileExt(File f, String type)
 	{
 		int count=0;
 		File[] path;
 		path = f.listFiles();
+		
 		for(File file:path)
 		{
 			if(file.isFile()==true)
 			{
 				String file2 = file.getAbsolutePath();
 				String file3 = file2.toString().toLowerCase();
-				if(file3.indexOf("html")!=-1) count++;
+				if(file3.indexOf(type)!=-1) count++;
 			}
-			else if(file.isDirectory()==true) count+=fileExt(file);
+			else if(file.isDirectory()==true) count+=fileExt(file,type);
 		}
 		return count;
 	}
