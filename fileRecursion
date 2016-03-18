@@ -71,7 +71,7 @@ public class getFiles{
 			{
 				String file2 = file.getAbsolutePath();
 				String file3 = file2.toString().toLowerCase();
-				if(file3.indexOf(type)!=-1) count++;
+				if(file3.endsWith(type)==true) count++;
 			}
 			else if(file.isDirectory()==true) count+=fileExt(file,type);
 		}
