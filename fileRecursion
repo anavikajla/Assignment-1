@@ -1,24 +1,39 @@
 import java.io.File;
 import java.lang.*;
 
-public class getFiles{
+public class FileSharing{
+	
 	static String[] TYPES = new String[]{"jpg", "png", "gif", "mp4", "mp3", "exe", "psd", "html", "xml"};
 	
-	public static void main(String args[]){
-		
+	public static void main(String args[])
+	{		
 		File wd = new File (".");
 		System.out.println(wd.getAbsolutePath());
 		filePath(wd);
 		
 		System.out.println("Number of files by type:");
+		
 		for(int i=0;i<TYPES.length;i++)
 		{
 			String type=TYPES[i];
-			int num = fileExt(wd, type);
+			int num = numOfFilesByExtension(wd, type);
 			System.out.println(type + " : " + num);
+		}
+		
+		System.out.println();
+		System.out.println("Size of files by type:");
+		
+		for(int j=0;j<TYPES.length;j++)
+		{
+			String type=TYPES[j];
+			long num2 = fileSizeByExtension(wd,type);
+			System.out.print(type + " : ");
+			String numCommas = String.format("%,d", num2);
+			System.out.println(numCommas);
 		}
 	}
 	
+	// a) Prints the files in each directory (along with the output of numFilesInDirectory to match given output style)
 	public static void filePath(File wd)
 	{
 		File[] path;
@@ -26,55 +41,90 @@ public class getFiles{
 		for(File file:path)
 		{
 			if(file.isDirectory()==true){
-			int num = numFileDirectory(file);
-			int num2 = numFile(file);
-			System.out.print(num + " ");
-			System.out.println("num" + " " + num2 + " " + "d/ " + file.getAbsolutePath());
-			filePath(file);
-		}
-		else System.out.println("0 " + "0 " + "f/ " + file.getAbsolutePath())
+				int num = numOfFilesinDirectory(file);
+				int num2 = numOfFilesUnderDirectory(file);
+				System.out.println(num2 + " " + num + " " + "d/ " + file.getAbsolutePath());
+				filePath(file);
+			}
+			else System.out.println("0 " + "0 " + "f/ " + file.getAbsolutePath());
 		}
 	}
 	
-	public static int numFileDirectory(File f){
+	// b) Gives the number of files under each directory	
+	
+	public static int numOfFilesinDirectory(File f)
+	{
 		int count=0;
 		File[] path;
 		path = f.listFiles();
 		if(f.isDirectory()==true)
 		{
-		for(File file:path) count++;
-		return count;
+		for(File file:path)
+		{
+			if(file.isFile()==true) count++;
 		}
+		}
+		return count;
 	}
 	
-	public static int numFile(File f){
+	// c) Gives the total number of files under each directory and its subdirectories
+	
+	public static int numOfFilesUnderDirectory(File f)
+	{
 		int count=0;
 		File[] path;
 		path = f.listFiles();
 		for(File file:path){
 			if(file.isFile() == true) count++;
 			
-			else if(file.isDirectory()) count+=numFile(file);
+			else if(file.isDirectory()==true) count+=numOfFilesUnderDirectory(file);
 		}
 		return count;
 	}
 	
-	public static int fileExt(File f, String type)
+	// d) Gives the total number of all the files under an extension
+	
+	public static int numOfFilesByExtension(File f, String type)
 	{
 		int count=0;
 		File[] path;
 		path = f.listFiles();
 		
-		for(File file:path)
-		{
-			if(file.isFile()==true)
+			for(File file:path)
 			{
-				String file2 = file.getAbsolutePath();
-				String file3 = file2.toString().toLowerCase();
-				if(file3.endsWith(type)==true) count++;
+				if(file.isFile()==true)
+				{
+					String file2 = file.getAbsolutePath();
+					String file3 = file2.toString().toLowerCase();
+						if(file3.endsWith(type)==true) count++; 
+				}
+				else if(file.isDirectory()==true) count+=numOfFilesByExtension(file,type);
 			}
-			else if(file.isDirectory()==true) count+=fileExt(file,type);
-		}
-		return count;
+			return count;
+	}
+	
+	// e) Gives the total size of all the files represented by an extension
+	
+	public static long fileSizeByExtension(File f, String type)
+	{
+		long size=0;
+		File[] path;
+		path = f.listFiles();
+		
+			for(File file:path)
+			{
+				if(file.isFile()==true)
+				{
+					String file2 = file.getAbsolutePath();
+					String file3 = file2.toString().toLowerCase();
+					if(file3.endsWith(type)==true) 
+					{
+						File file4 = new File(file3);
+						size = file4.length();
+					}
+				}
+				else if(file.isDirectory()==true) size+=fileSizeByExtension(file,type);
+			}
+			return size;
 	}
 }
